@@ -1,6 +1,7 @@
 from nautobot.apps import jobs
 from nautobot.dcim.models import Manufacturer, DeviceType, Device, Location
 from nautobot.extras.models.roles import Role
+from nautobot.extras.models.statuses import Status
 from nautobot.ipam.models import IPAddress
 import requests
 
@@ -45,18 +46,21 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     model = ap.get("model", "Unknown")
                     ip_addr = ap.get("ip_address")
                     site_name = ap.get("group_name", "Default Site")
+                    status, _ = Status.objects.get_or_create(ap.get("status"))
 
                     device_type, _ = DeviceType.objects.get_or_create(
                         manufacturer=manufacturer,
                         model=model
                     )
 
+
+
                     device, created = Device.objects.get_or_create(
                         name=name,
                         defaults={
                             "device_type": device_type,
                             "role": device_role,
-                            "status": "active" if ap.get("status") == "Up" else "offline",
+                            "status": status,
                             "serial": serial,
                         }
                     )
