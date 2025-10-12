@@ -29,7 +29,6 @@ class ArubaCentralIntegrationJob(jobs.Job):
         try:
             manufacturer, _ = Manufacturer.objects.get_or_create(name="Aruba")
             device_role, _ = Role.objects.get_or_create(name="Access Point")
-            location, _ = Location.objects.get_or_create(name="Hyderabad HQ")
 
             self.logger.info([f.name for f in Device._meta.fields])
 
@@ -57,7 +56,6 @@ class ArubaCentralIntegrationJob(jobs.Job):
                         defaults={
                             "device_type": device_type,
                             "device_role": device_role,
-                            "site": site_name,
                             "status": "active" if ap.get("status") == "Up" else "offline",
                             "serial": serial,
                         }
