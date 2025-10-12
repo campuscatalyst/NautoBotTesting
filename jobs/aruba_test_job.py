@@ -38,6 +38,8 @@ class ArubaCentralIntegrationJob(jobs.Job):
             device_role, _ = Role.objects.get_or_create(name="Access Point")
 
             self.logger.info([f.name for f in Device._meta.fields])
+            self.logger.info([f.name for f in LocationType._meta.get_fields()])
+            self.logger.info([f.name for f in Location._meta.get_fields()])
 
             response = requests.get(url=api_url, headers=headers)
 
