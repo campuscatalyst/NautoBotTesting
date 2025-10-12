@@ -46,7 +46,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     model = ap.get("model", "Unknown")
                     ip_addr = ap.get("ip_address")
                     site_name = ap.get("group_name", "Default Site")
-                    status, _ = Status.objects.get_or_create(ap.get("status"))
+                    # status, _ = Status.objects.get_or_create(ap.get("status"))
 
                     device_type, _ = DeviceType.objects.get_or_create(
                         manufacturer=manufacturer,
