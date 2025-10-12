@@ -1,5 +1,6 @@
 from nautobot.apps import jobs
 from nautobot.dcim.models import Manufacturer, DeviceType, Device
+from nautobot.extras.models.roles import Role
 from nautobot.ipam.models import IPAddress
 import requests
 
@@ -26,13 +27,51 @@ class ArubaCentralIntegrationJob(jobs.Job):
         }
 
         try:
+            manufacturer, _ = Manufacturer.objects.get_or_create(name="Aruba")
+            device_role, _ = Role.objects.get_or_create(name="Access Point")
+
             response = requests.get(url=api_url, headers=headers)
 
             if response.status_code == 200:
                 parsed_response = response.json()
                 aps = parsed_response.get("aps")
-                self.logger.info(f"{aps}")
                 self.logger.info(f"Successfully fetched the data")
+
+                for ap in aps:
+                    name = ap.get("name") or ap.get("serial")
+                    serial = ap.get("serial")
+                    model = ap.get("model", "Unknown")
+                    ip_addr = ap.get("ip_address")
+                    site_name = ap.get("group_name", "Default Site")
+
+                    device_type, _ = DeviceType.objects.get_or_create(
+                        manufacturer=manufacturer,
+                        model=model
+                    )
+
+                    device, created = Device.objects.get_or_create(
+                        name=name,
+                        defaults={
+                            "device_type": device_type,
+                            "device_role": device_role,
+                            "site": site_name,
+                            "status": "active" if ap.get("status") == "Up" else "offline",
+                            "serial": serial,
+                        }
+                    )
+
+                    if created:
+                        self.logger.info(f"Created {device.name}")
+                    else:
+                        self.logger.info(f"Device already exists: {device.name}")
+
+                    if ip_addr:
+                        ip_obj, _ = IPAddress.objects.get_or_create(address=f"{ip_addr}/32")
+                        device.primary_ip4 = ip_obj
+                        device.save()
+                    
+                    self.logger.info("Successfully added device into nautobot")
+
             else:
                 self.logger.error(f"Error while fetching the data")
                 return 
