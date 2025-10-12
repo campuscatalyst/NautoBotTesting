@@ -19,7 +19,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
 
     def run(self):
         base_url = "https://api-ap.central.arubanetworks.com"
-        access_token = "KrsBGz6IA29pll2yGB042yQvueBHtqEG"
+        access_token = "6ghiIPmVG6jMvDD3086ztvAWC2DxbsNm"
 
         if not access_token:
             self.logger.error("Access token not found.")
@@ -52,8 +52,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     name = ap.get("name") or ap.get("serial")
                     serial = ap.get("serial")
                     model = ap.get("model", "Unknown")
-                    ip_addr = ap.get("ip_address")
-                    site_name = ap.get("group_name", "Default Site")
+                    ip_addr = ap.get("public_ip_address") or ap.get("ip_address")
                     aruba_status = ap.get("status", "Up")
                     nautobot_status_name = aruba_to_nautobot_status.get(aruba_status, "Planned")
                     status_name = Status.objects.get(name__iexact=nautobot_status_name)
