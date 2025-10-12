@@ -9,7 +9,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
 
     def run(self):
         base_url = "https://api-ap.central.arubanetworks.com"
-        access_token = "YwzVJ3hIMY2D2u2XtrgsuEPu9gS5MGnP"
+        access_token = "BM5mtKbYTPI5OoHF69ve55M3uOSHqkHw"
 
         if not access_token:
             self.logger.error("Access token not found.")
@@ -17,7 +17,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
         
         api_url = f"{base_url}/monitoring/v2/aps"
 
-        self.logger.info(f"Fetching data from ${api_url}")
+        self.logger.info(f"Fetching data from {api_url}")
 
         headers = {
             "Authorization": f"Bearer {access_token}",
