@@ -53,14 +53,11 @@ class ArubaCentralIntegrationJob(jobs.Job):
                         model=model
                     )
 
-
-
                     device, created = Device.objects.get_or_create(
                         name=name,
                         defaults={
                             "device_type": device_type,
                             "role": device_role,
-                            "status": status,
                             "serial": serial,
                         }
                     )
