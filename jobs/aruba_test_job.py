@@ -1,4 +1,6 @@
 from nautobot.apps import jobs
+from nautobot.dcim.models import Manufacturer, DeviceType, Device
+from nautobot.ipam.models import IPAddress
 import requests
 
 name = "POC"
@@ -28,6 +30,8 @@ class ArubaCentralIntegrationJob(jobs.Job):
 
             if response.status_code == 200:
                 parsed_response = response.json()
+                aps = parsed_response.aps
+                self.logger.info(f"{aps}")
                 self.logger.info(f"Successfully fetched the data")
             else:
                 self.logger.error(f"Error while fetching the data")
