@@ -1,5 +1,5 @@
 from nautobot.apps import jobs
-from nautobot.dcim.models import Manufacturer, DeviceType, Device
+from nautobot.dcim.models import Manufacturer, DeviceType, Device, Location
 from nautobot.extras.models.roles import Role
 from nautobot.ipam.models import IPAddress
 import requests
@@ -29,6 +29,9 @@ class ArubaCentralIntegrationJob(jobs.Job):
         try:
             manufacturer, _ = Manufacturer.objects.get_or_create(name="Aruba")
             device_role, _ = Role.objects.get_or_create(name="Access Point")
+            location, _ = Location.objects.get_or_create(name="Hyderabad HQ")
+
+            self.logger.info([f.name for f in Device._meta.fields])
 
             response = requests.get(url=api_url, headers=headers)
 
