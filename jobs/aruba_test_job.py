@@ -58,7 +58,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     nautobot_status_name = aruba_to_nautobot_status.get(aruba_status, "Planned")
                     status_name = Status.objects.get(name__iexact=nautobot_status_name)
 
-                    loc_type, _ = LocationType.objects.get_or_create(name="Site", defaults={"slug": "site"})
+                    loc_type, _ = LocationType.objects.get_or_create(name="Site")
 
                     location, _ = Location.objects.get_or_create(
                         name="Hyderabad HQ",
