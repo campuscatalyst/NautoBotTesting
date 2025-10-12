@@ -1,5 +1,5 @@
 from nautobot.apps import jobs
-from nautobot.dcim.models import Manufacturer, DeviceType, Device, Location
+from nautobot.dcim.models import Manufacturer, DeviceType, Device, Location, LocationType
 from nautobot.extras.models.roles import Role
 from nautobot.extras.models.statuses import Status
 from nautobot.ipam.models import IPAddress
@@ -55,6 +55,17 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     aruba_status = ap.get("status", "Up")
                     nautobot_status_name = aruba_to_nautobot_status.get(aruba_status, "Planned")
                     status_name = Status.objects.get(name__iexact=nautobot_status_name)
+
+                    loc_type, _ = LocationType.objects.get_or_create(name="Site", slug="site")
+
+                    location, _ = Location.objects.get_or_create(
+                        name="Hyderabad HQ",
+                        location_type=loc_type,
+                        defaults={
+                            "description": "Main Hyderabad office",
+                        }
+                    )
+
                 
                     device_type, _ = DeviceType.objects.get_or_create(
                         manufacturer=manufacturer,
@@ -68,6 +79,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
                             "role": device_role,
                             "status": status_name,
                             "serial": serial,
+                            "location": location
                         }
                     )
 
