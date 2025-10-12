@@ -55,7 +55,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
                         name=name,
                         defaults={
                             "device_type": device_type,
-                            "device_role": device_role,
+                            "role": device_role,
                             "status": "active" if ap.get("status") == "Up" else "offline",
                             "serial": serial,
                         }
