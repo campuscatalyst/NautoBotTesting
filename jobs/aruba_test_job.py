@@ -7,6 +7,12 @@ import requests
 
 name = "POC"
 
+aruba_to_nautobot_status = {
+    "Up": "Active",
+    "Down": "Offline",
+    "Provisioning": "Planned",
+}
+
 class ArubaCentralIntegrationJob(jobs.Job):
     class Meta:
         name = "Aruba Central - Device Fetch Test"
@@ -46,8 +52,10 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     model = ap.get("model", "Unknown")
                     ip_addr = ap.get("ip_address")
                     site_name = ap.get("group_name", "Default Site")
-                    # status, _ = Status.objects.get_or_create(ap.get("status"))
-
+                    aruba_status = ap.get("status", "Up")
+                    nautobot_status_name = aruba_to_nautobot_status.get(aruba_status, "Planned")
+                    status_name = Status.objects.get(name__iexact=nautobot_status_name)
+                
                     device_type, _ = DeviceType.objects.get_or_create(
                         manufacturer=manufacturer,
                         model=model
@@ -58,6 +66,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
                         defaults={
                             "device_type": device_type,
                             "role": device_role,
+                            "status": status_name,
                             "serial": serial,
                         }
                     )
