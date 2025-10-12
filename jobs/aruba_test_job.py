@@ -7,10 +7,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
     class Meta:
         name = "Aruba Central - Device Fetch Test"
 
-    def run(self, data, commit):
-        print(data)
-        print(commit)
-
+    def run(self):
         base_url = "https://api-ap.central.arubanetworks.com"
         access_token = "YwzVJ3hIMY2D2u2XtrgsuEPu9gS5MGnP"
 
