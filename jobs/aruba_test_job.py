@@ -2,7 +2,7 @@ from nautobot.apps import jobs
 from nautobot.dcim.models import Manufacturer, DeviceType, Device, Location, LocationType
 from nautobot.extras.models.roles import Role
 from nautobot.extras.models.statuses import Status
-from nautobot.ipam.models import IPAddress
+from nautobot.ipam.models import IPAddress, Prefix
 import requests
 
 name = "POC"
@@ -19,7 +19,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
 
     def run(self):
         base_url = "https://api-ap.central.arubanetworks.com"
-        access_token = "6ghiIPmVG6jMvDD3086ztvAWC2DxbsNm"
+        access_token = "OOPCTd9aPXp9kz3lE9einUDMFdvB6bJ2"
 
         if not access_token:
             self.logger.error("Access token not found.")
@@ -52,7 +52,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     name = ap.get("name") or ap.get("serial")
                     serial = ap.get("serial")
                     model = ap.get("model", "Unknown")
-                    ip_addr = ap.get("public_ip_address") or ap.get("ip_address")
+                    ip_addr = ap.get("ip_address")
                     aruba_status = ap.get("status", "Up")
                     nautobot_status_name = aruba_to_nautobot_status.get(aruba_status, "Planned")
                     status_name = Status.objects.get(name__iexact=nautobot_status_name)
