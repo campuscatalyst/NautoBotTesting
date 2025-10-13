@@ -46,6 +46,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
             if response.status_code == 200:
                 parsed_response = response.json()
                 aps = parsed_response.get("aps")
+                self.logger.info(aps)
                 self.logger.info(f"Successfully fetched the data")
 
                 for ap in aps:
