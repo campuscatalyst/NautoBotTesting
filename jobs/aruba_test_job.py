@@ -46,7 +46,6 @@ class ArubaCentralIntegrationJob(jobs.Job):
             if response.status_code == 200:
                 parsed_response = response.json()
                 aps = parsed_response.get("aps")
-                self.logger.info(aps)
                 self.logger.info(f"Successfully fetched the data")
 
                 for ap in aps:
@@ -93,10 +92,10 @@ class ArubaCentralIntegrationJob(jobs.Job):
                     else:
                         self.logger.info(f"Device already exists: {device.name}")
 
-                    if ip_addr:
-                        ip_obj, _ = IPAddress.objects.get_or_create(address=f"{ip_addr}/32")
-                        device.primary_ip4 = ip_obj
-                        device.save()
+                    # if ip_addr:
+                    #     ip_obj, _ = IPAddress.objects.get_or_create(address=f"{ip_addr}/32")
+                    #     device.primary_ip4 = ip_obj
+                    #     device.save()
                     
                     self.logger.info("Successfully added device into nautobot")
 
