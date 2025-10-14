@@ -19,7 +19,7 @@ class ArubaCentralIntegrationJob(jobs.Job):
 
     def run(self):
         base_url = "https://api-ap.central.arubanetworks.com"
-        access_token = "9RZqDySmov7pTp5cHghcwDMJimfGaig9"
+        access_token = "uQ7VjeXSAZc11cg7J9v9Df92MLDUVb13"
 
         if not access_token:
             self.logger.error("Access token not found.")
